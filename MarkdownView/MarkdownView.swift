@@ -48,7 +48,7 @@ open class MarkdownView: UIView {
     }
   }
 
-  public func load(markdown: String?, enableImage: Bool = true) {
+  public func load(markdown: String?, styleSheet: String? = nil, enableImage: Bool = true) {
     guard let markdown = markdown else { return }
 
     let bundle = Bundle(for: MarkdownView.self)
@@ -70,6 +70,12 @@ open class MarkdownView: UIView {
 
       let controller = WKUserContentController()
       controller.addUserScript(userScript)
+        
+      if let styleSheet = styleSheet {
+        let injectStyleScript = "var style = document.createElement('style'); style.innerHTML = '\(styleSheet)'; document.head.appendChild(style);"
+        let injectStyleUserScript = WKUserScript(source: injectStyleScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        controller.addUserScript(injectStyleUserScript)
+      }
 
       let configuration = WKWebViewConfiguration()
       configuration.userContentController = controller
