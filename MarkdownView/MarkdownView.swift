@@ -72,7 +72,7 @@ open class MarkdownView: UIView {
       controller.addUserScript(userScript)
         
       if let styleSheet = styleSheet, let escapedStyleSheet = escape(markdown: styleSheet) {
-        let injectStyleScript = "var style = document.createElement('style'); style.innerHTML = '\(escapedStyleSheet)'; document.head.appendChild(style);"
+        let injectStyleScript = "var style = document.createElement('style'); style.innerHTML = decodeURIComponent('\(escapedStyleSheet)');; document.head.appendChild(style);"
         let injectStyleUserScript = WKUserScript(source: injectStyleScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         controller.addUserScript(injectStyleUserScript)
       }
